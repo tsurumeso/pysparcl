@@ -5,12 +5,6 @@ from scipy.spatial.distance import squareform
 import distfun
 
 
-class SparseHC():
-
-    def __init__():
-        pass
-
-
 def _soft_thresholding(x, d):
     return np.sign(x) * np.maximum(0, np.abs(x) - d)
 
@@ -59,7 +53,7 @@ def _get_uw(ds, wbound, niter, uorth=None):
     return u, w, crit
 
 
-def cluster(x, dists=None, wbound=None, metric='absolute', niter=15):
+def pdist(x, dists=None, wbound=None, metric='absolute', niter=15):
     if dists is None:
         dists = distfun.distfun(x)
         if metric == 'squared':
@@ -74,9 +68,9 @@ def _argwrapper(args):
     return args[0](*args[1:])
 
 
-def _cluster_multiprocess(dists, wbound, metric, id):
-    print '_cluster_multiprocess() id: %d' % id
-    u, w, crit, dists = cluster(
+def _pdist_multiprocess(dists, wbound, metric, id):
+    print '_pdist_multiprocess() id: %d' % id
+    u, w, crit, dists = pdist(
         x=None, dists=dists, wbound=wbound, metric=metric)
     return id, w, crit
 
@@ -87,7 +81,7 @@ def _permute_multiprocess(permdists, wbounds, metric, id):
         permdists[:, i] = np.random.permutation(permdists[:, i])
     for i in xrange(len(wbounds)):
         print '_permute_multiprocess() id: %d -> %d' % (id, i)
-        u, w, crit, dists = cluster(
+        u, w, crit, dists = pdist(
             x=None, dists=permdists, wbound=wbounds[i], metric=metric)
         permtot[i] = np.max(crit)
     return id, permtot.T
@@ -106,10 +100,10 @@ def permute(x, nperms=10, wbounds=None, metric='absolute', njobs=None):
     permtots = np.zeros((len(wbounds), nperms))
     nnonzerows = np.zeros(len(wbounds))
 
-    u, w, crit, dists = cluster(x, wbound=wbounds[0], metric=metric)
+    u, w, crit, dists = pdist(x, wbound=wbounds[0], metric=metric)
     nnonzerows[0] = np.sum(w != 0)
     tots[0] = crit
-    results = p.map(_argwrapper, [(_cluster_multiprocess,
+    results = p.map(_argwrapper, [(_pdist_multiprocess,
                                   dists, wbounds[i + 1], metric, i + 1)
                                   for i in range(len(wbounds) - 1)])
 

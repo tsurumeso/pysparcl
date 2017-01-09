@@ -1,3 +1,3 @@
-from sparsehc import permute
-from sparsehc import cluster
+import kmeans
+import hierarchy
 from distfun import distfun
