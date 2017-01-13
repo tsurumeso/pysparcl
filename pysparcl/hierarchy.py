@@ -53,7 +53,7 @@ def _get_uw(ds, wbound, niter, uorth=None):
     return u, w, crit
 
 
-def pdist(x, dists=None, wbound=None, metric='absolute', niter=15):
+def pdist(x, dists=None, wbound=None, metric='squared', niter=15):
     if dists is None:
         dists = core.distfun(x)
         if metric == 'squared':
@@ -87,7 +87,7 @@ def _permute_multiprocess(permdists, wbounds, metric, id):
     return id, permtot.T
 
 
-def permute(x, nperms=10, wbounds=None, metric='absolute', njobs=None):
+def permute(x, nperms=10, wbounds=None, metric='squared', njobs=None):
     if wbounds is None:
         wbounds = np.linspace(1.1, np.sqrt(x.shape[1]) * 0.7, 10)
 
