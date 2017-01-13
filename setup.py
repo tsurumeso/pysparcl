@@ -3,8 +3,8 @@ from setuptools import setup, Extension
 import numpy
 
 ext_modules = [
-    Extension('pysparcl.distfun',
-              sources=['pysparcl/distfun.pyx'],
+    Extension('pysparcl.core',
+              sources=['pysparcl/core.pyx'],
               include_dirs=[numpy.get_include()])
 ]
 

@@ -2,7 +2,7 @@ import numpy as np
 import multiprocessing
 from scipy.spatial.distance import squareform
 
-import distfun
+import core
 
 
 def _soft_thresholding(x, d):
@@ -55,7 +55,7 @@ def _get_uw(ds, wbound, niter, uorth=None):
 
 def pdist(x, dists=None, wbound=None, metric='absolute', niter=15):
     if dists is None:
-        dists = distfun.distfun(x)
+        dists = core.distfun(x)
         if metric == 'squared':
             dists = dists ** 2
     if wbound is None:

@@ -1,3 +1,4 @@
 import kmeans
 import hierarchy
-from distfun import distfun
+from core import distfun
+from core import multfun
