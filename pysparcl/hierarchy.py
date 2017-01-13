@@ -119,5 +119,6 @@ def permute(x, nperms=10, wbounds=None, metric='absolute', njobs=None):
     for i in xrange(nperms):
         permtots[:, i] = results[i][1]
 
+    p.close()
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
     return gaps, wbounds, nnonzerows
