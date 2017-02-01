@@ -4,10 +4,11 @@ Python implementation of the sparse clustering methods of Witten and Tibshirani 
 
 ## Functions
 
+- Sparse KMeans clustering
 - Sparse hierarchical clustering
 - Selection of turning parameter for sparse hierarchical clustering
 
-Sparse KMeans has not implemented yet.
+Selection of turning parameter for sparse KMeans has not implemented yet.
 
 ## References
 - [1] D. M. Witten and R. Tibshirani, “A framework for feature selection in clustering”,  
