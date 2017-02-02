@@ -1,7 +1,9 @@
-import core
-import internal
+from __future__ import print_function
+
 import numpy as np
 import multiprocessing
+from pysparcl import core
+from pysparcl import internal
 
 
 def pdist(x, dists=None, wbound=None, metric='squared', niter=15):
@@ -34,7 +36,7 @@ def permute(x, nperms=10, wbounds=None, metric='squared', n_jobs=1):
                                   dists, wbounds[i + 1], metric, i + 1)
                                   for i in range(len(wbounds) - 1)])
 
-    for i in xrange(len(wbounds) - 1):
+    for i in range(len(wbounds) - 1):
         nnonzerows[results[i][0]] = np.sum(results[i][1] != 0)
         tots[results[i][0]] = results[i][2]
 
@@ -43,7 +45,7 @@ def permute(x, nperms=10, wbounds=None, metric='squared', n_jobs=1):
                                   permdists, wbounds, metric, i)
                                   for i in range(nperms)])
 
-    for i in xrange(nperms):
+    for i in range(nperms):
         permtots[:, i] = results[i][1]
 
     p.close()
@@ -56,19 +58,17 @@ def _argwrapper(args):
 
 
 def _pdist_multiprocess(dists, wbound, metric, id):
-    print '_pdist_multiprocess() id: %d' % id
-    u, w, crit, dists = pdist(
-        x=None, dists=dists, wbound=wbound, metric=metric)
+    print('_pdist_multiprocess() id: %d' % id)
+    u, w, crit, dists = pdist(None, dists, wbound, metric)
     return id, w, crit
 
 
 def _permute_multiprocess(permdists, wbounds, metric, id):
     permtot = np.zeros(len(wbounds))
-    for i in xrange(permdists.shape[1]):
+    for i in range(permdists.shape[1]):
         permdists[:, i] = np.random.permutation(permdists[:, i])
-    for i in xrange(len(wbounds)):
-        print '_permute_multiprocess() id: %d -> %d' % (id, i)
-        u, w, crit, dists = pdist(
-            x=None, dists=permdists, wbound=wbounds[i], metric=metric)
+    for i in range(len(wbounds)):
+        print('_permute_multiprocess() id: %d -> %d' % (id, i))
+        u, w, crit, dists = pdist(None, permdists, wbounds[i], metric)
         permtot[i] = np.max(crit)
     return id, permtot.T

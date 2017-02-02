@@ -1,2 +1,2 @@
-import cluster
-import hierarchy
+from pysparcl import cluster
+from pysparcl import hierarchy

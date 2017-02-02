@@ -1,5 +1,5 @@
-import utils
 import numpy as np
+from pysparcl import utils
 from sklearn.cluster import KMeans
 from scipy.spatial.distance import pdist
 from scipy.spatial.distance import squareform
