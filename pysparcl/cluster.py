@@ -20,9 +20,9 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose
         return None
 
     if not centers is None:
-        cs = KMeans(k, centers, max_iter=10, n_init=1, n_jobs=1).fit(x).labels_
+        cs = KMeans(centers.shape[0], init=centers, n_init=1).fit(x).labels_
     else:
-        cs = KMeans(k, max_iter=10, n_init=n_init, n_jobs=1).fit(x).labels_
+        cs = KMeans(k, init='random', n_init=n_init).fit(x).labels_
 
     out = []
     for i in range(len(wbounds)):
@@ -34,7 +34,10 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose
             niter += 1
             ws_old = ws
             if niter > 1:
-                cs = core._update_cs(x, k, ws, cs)
+                if not k is None:
+                    cs = core._update_cs(x, k, ws, cs)
+                else:
+                    cs = core._update_cs(x, centers.shape[0], ws, cs)
             ws = core._update_ws(x, cs, wbounds[i])
             bcss_ws = np.sum(core._get_wcss(x, cs)[1] * ws)
         out.append([ws, cs, bcss_ws, wbounds[i]])
@@ -75,4 +78,5 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=
             perm_bcss = core._get_wcss(permx[i], perm_out[j][1])[1]
             permtots[j, i] = np.sum(perm_out[j][0] * perm_bcss)
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
-    return gaps, wbounds, nnonzerows
+    bestw = wbounds[gaps.argmax()]
+    return bestw, gaps, wbounds, nnonzerows

@@ -38,7 +38,7 @@ def _get_wcss(x, cs, ws=None):
         mask = (cs == i)
         if np.sum(mask) > 1:
             wcss_perf += np.sum(np.square(x[mask, :] - np.mean(x[mask, :], axis=0)), axis=0) 
-    bcss_perf = np.sum(np.square(x - np.mean(x)), axis=0) - wcss_perf
+    bcss_perf = np.sum(np.square(x - np.mean(x, axis=0)), axis=0) - wcss_perf
     return wcss_perf, bcss_perf
 
 
@@ -54,15 +54,15 @@ def _update_cs(x, k, ws, cs):
             if np.sum(cs == i) == 1:
                 mus = utils._rbind(mus, z[cs == i, :])
     if mus is None:
-        km = KMeans(k, max_iter=10, n_init=10, n_jobs=1).fit(z)
+        km = KMeans(k, init='random', n_init=10).fit(z)
     else:
         distmat = squareform(pdist(utils._rbind(z, mus)))
         distmat = distmat[:nrowz, (nrowz + 1):(nrowz + k)]
         nearest = distmat.argmin(axis=1)
         if len(np.unique(nearest)) == k:
-            km = KMeans(mus, max_iter=10, n_init=1, n_jobs=1).fit(z)
+            km = KMeans(k, init=mus, n_init=1).fit(z)
         else:
-            km = KMeans(k, max_iter=10, n_init=10, n_jobs=1).fit(z)
+            km = KMeans(k, init='random', n_init=10).fit(z)
     return km.labels_
 
 

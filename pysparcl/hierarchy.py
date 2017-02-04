@@ -50,7 +50,8 @@ def permute(x, nperms=10, wbounds=None, metric='squared', n_jobs=1):
 
     p.close()
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
-    return gaps, wbounds, nnonzerows
+    bestw = wbounds[gaps.argmax()]
+    return bestw, gaps, wbounds, nnonzerows
 
 
 def _argwrapper(args):
