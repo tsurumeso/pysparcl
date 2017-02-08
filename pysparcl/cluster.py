@@ -1,5 +1,4 @@
-from __future__ import print_function
-
+import six
 import numpy as np
 from pysparcl import core
 from pysparcl import utils
@@ -7,8 +6,7 @@ from sklearn.cluster import KMeans
 
 
 def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose=False):
-    n = x.shape[0]
-    p = x.shape[1]
+    n, p = x.shape
     if k is None and centers is None:
         return None
     if not k is None and not centers is None:
@@ -42,17 +40,16 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose
             bcss_ws = np.sum(core._get_wcss(x, cs)[1] * ws)
         out.append([ws, cs, bcss_ws, wbounds[i]])
         if verbose:
-            print('*-------------------------------------------------*')
-            print('iter:', i + 1)
-            print('wbound:', wbounds[i])
-            print('number of non-zero weights:', np.count_nonzero(ws))
-            print('sum of weights:', np.sum(ws))
+            six.print_('*-------------------------------------------------*')
+            six.print_('iter:', i + 1)
+            six.print_('wbound:', wbounds[i])
+            six.print_('number of non-zero weights:', np.count_nonzero(ws))
+            six.print_('sum of weights:', np.sum(ws), flush=True)
     return out
     
 
 def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=False):
-    n = x.shape[0]
-    p = x.shape[1]
+    n, p = x.shape
     if wbounds is None:
         wbounds = np.exp(np.linspace(np.log(1.2), np.log(np.sqrt(p) * 0.9), nvals))
     if wbounds.min() <= 1 or len(wbounds) < 2:

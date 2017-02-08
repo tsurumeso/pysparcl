@@ -6,14 +6,31 @@ from pysparcl import core
 from pysparcl import internal
 
 
-def pdist(x, dists=None, wbound=None, metric='squared', niter=15):
+def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
+    if x is None and dists is None:
+        return None
     if dists is None:
-        dists = internal.distfun(x)
-        if metric == 'squared':
-            dists = dists ** 2
+        n, p = x.shape
+        nan_inds = np.isnan(x)
+        xnonan = x.copy()
+        xnonan[nan_inds] = 0
+        dists = internal.distfun(xnonan)
+        if np.sum(nan_inds) > 0:
+            xbin = np.ones((n, p))
+            xbin[nan_inds] = 0
+            mult = internal.multfun(xbin)
+            if metric == 'squared':
+                dists *= np.sqrt(p / np.sum(mult != 0, axis=1))[:, np.newaxis]
+            elif metric == 'absolute':
+                dists *= (p / np.sum(mult != 0, axis=1))[:, np.newaxis]
+            dists[mult == 0] = 0
     if wbound is None:
         wbound = 0.5 * np.sqrt(dists.shape[1])
-    u, w, crit = core._get_uw(dists, wbound, niter)
+    if wbound <= 1:
+        return None
+    if metric == 'squared':
+        dists = np.square(dists)
+    u, w, crit = core._get_uw(dists, wbound, niter, uorth)
     return u, w, crit, dists
 
 

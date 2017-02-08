@@ -6,17 +6,23 @@ from scipy.spatial.distance import squareform
 
 
 def _get_uw(ds, wbound, niter, uorth=None):
-    n = ds.shape[0]
-    p = ds.shape[1]
+    n, p = ds.shape
     u = np.random.randn(p)
     w = (np.ones(p) / p) * wbound
     w_old = np.random.standard_normal(p)
-    iter = 1
-    while iter <= niter and np.sum(np.abs(w_old - w) / np.sum(np.abs(w_old))) > 1e-4:
-        if iter > 1:
-            u = ds[:, argw >= lam].dot(w[argw >= lam].T)
-        if iter == 1:
+    iter = 0
+    if not uorth is None:
+        if np.sum(np.abs(uorth - uorth.T)) > 1e-10:
+            return None
+        uorth = squareform(uorth)
+        uorth /= np.sqrt(np.sum(np.square(uorth)))
+    while iter < niter and np.sum(np.abs(w_old - w) / np.sum(np.abs(w_old))) > 1e-4:
+        if iter == 0:
             u = ds.dot(w.T)
+        else:
+            u = ds[:, argw >= lam].dot(w[argw >= lam].T)
+        if not uorth is None:
+            u -= uorth.dot(uorth.T.dot(u))
         iter += 1
         u = u / np.linalg.norm(u)
         w_old = w.copy()
@@ -25,13 +31,15 @@ def _get_uw(ds, wbound, niter, uorth=None):
         w = utils._soft_thresholding(argw, lam)
         w = w / np.linalg.norm(w)
     u = ds[:, argw >= lam].dot(w[argw >= lam].T) / np.sum(w)
+    if not uorth is None:
+        u -= uorth.dot(uorth.T.dot(u))
     u = u / np.linalg.norm(u)
     w = w / np.linalg.norm(w)
     crit = np.sum(u * (ds.dot(w.T)))
     u = squareform(u / np.sqrt(2.))
     return u, w, crit
-    
-    
+
+
 def _get_wcss(x, cs, ws=None):
     wcss_perf = np.zeros(x.shape[1])
     for i in np.unique(cs):
