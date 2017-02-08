@@ -60,6 +60,7 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=
     if not k is None and not centers is None:
         if centers.shape[0] != k or centers.shape[1] != p:
             return None
+
     permx = np.zeros((nperms, n, p))
     nnonzerows = None
     for i in range(nperms):
@@ -67,6 +68,7 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=
             permx[i, :, j] = np.random.permutation(x[:, j])
     tots = None
     out = kmeans(x, k, wbounds, centers=centers, verbose=verbose)
+
     for i in range(len(out)):
         nnonzerows = utils._cbind(nnonzerows, np.sum(out[i][0] != 0))
         bcss = core._get_wcss(x, out[i][1])[1]
@@ -77,6 +79,7 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=
         for j in range(len(perm_out)):
             perm_bcss = core._get_wcss(permx[i], perm_out[j][1])[1]
             permtots[j, i] = np.sum(perm_out[j][0] * perm_bcss)
+
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
     bestw = wbounds[gaps.argmax()]
     return bestw, gaps, wbounds, nnonzerows
