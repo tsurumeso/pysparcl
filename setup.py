@@ -4,9 +4,11 @@ from setuptools import setup, Extension
 
 
 ext_modules = [
-    Extension('pysparcl.internal',
-              sources=['pysparcl/internal.pyx'],
-              include_dirs=[numpy.get_include()])
+    Extension(
+        'pysparcl.internal',
+        sources=['pysparcl/internal.pyx'],
+        include_dirs=[numpy.get_include()]
+    )
 ]
 
 setup(

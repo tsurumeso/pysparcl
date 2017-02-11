@@ -11,17 +11,18 @@ def _get_uw(ds, wbound, niter, uorth=None):
     w = (np.ones(p) / p) * wbound
     w_old = np.random.standard_normal(p)
     iter = 0
-    if not uorth is None:
+    if uorth is not None:
         if np.sum(np.abs(uorth - uorth.T)) > 1e-10:
             return None
         uorth = squareform(uorth)
         uorth /= np.sqrt(np.sum(np.square(uorth)))
-    while iter < niter and np.sum(np.abs(w_old - w) / np.sum(np.abs(w_old))) > 1e-4:
+    while (iter < niter and
+           np.sum(np.abs(w_old - w) / np.sum(np.abs(w_old))) > 1e-4):
         if iter == 0:
             u = ds.dot(w.T)
         else:
             u = ds[:, argw >= lam].dot(w[argw >= lam].T)
-        if not uorth is None:
+        if uorth is not None:
             u -= uorth.dot(uorth.T.dot(u))
         iter += 1
         u = u / np.linalg.norm(u)
@@ -31,7 +32,7 @@ def _get_uw(ds, wbound, niter, uorth=None):
         w = utils._soft_thresholding(argw, lam)
         w = w / np.linalg.norm(w)
     u = ds[:, argw >= lam].dot(w[argw >= lam].T) / np.sum(w)
-    if not uorth is None:
+    if uorth is not None:
         u -= uorth.dot(uorth.T.dot(u))
     u = u / np.linalg.norm(u)
     w = w / np.linalg.norm(w)
@@ -45,7 +46,8 @@ def _get_wcss(x, cs, ws=None):
     for i in np.unique(cs):
         mask = (cs == i)
         if np.sum(mask) > 1:
-            wcss_perf += np.sum(np.square(x[mask, :] - np.mean(x[mask, :], axis=0)), axis=0) 
+            wcss_perf += np.sum(
+                np.square(x[mask, :] - np.mean(x[mask, :], axis=0)), axis=0)
     bcss_perf = np.sum(np.square(x - np.mean(x, axis=0)), axis=0) - wcss_perf
     return wcss_perf, bcss_perf
 
@@ -55,7 +57,7 @@ def _update_cs(x, k, ws, cs):
     z = x * np.sqrt(ws[ws != 0])
     nrowz = z.shape[0]
     mus = None
-    if not cs is None:
+    if cs is not None:
         for i in np.unique(cs):
             if np.sum(cs == i) > 1:
                 mus = utils._rbind(mus, np.mean(z[cs == i, :], axis=0))

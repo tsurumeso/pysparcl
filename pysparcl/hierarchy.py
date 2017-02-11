@@ -63,4 +63,3 @@ def permute(x, nperms=10, wbounds=None, metric='squared', verbose=False):
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
     bestw = wbounds[gaps.argmax()]
     return bestw, gaps, wbounds, nnonzerows
-

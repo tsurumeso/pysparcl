@@ -5,11 +5,12 @@ from pysparcl import utils
 from sklearn.cluster import KMeans
 
 
-def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose=False):
+def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
+           verbose=False):
     n, p = x.shape
     if k is None and centers is None:
         return None
-    if not k is None and not centers is None:
+    if k is not None and centers is not None:
         if centers.shape[0] != k or centers.shape[1] != p:
             return None
     if wbounds is None:
@@ -17,7 +18,7 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose
     if wbounds.min() <= 1:
         return None
 
-    if not centers is None:
+    if centers is not None:
         cs = KMeans(centers.shape[0], init=centers, n_init=1).fit(x).labels_
     else:
         cs = KMeans(k, init='random', n_init=n_init).fit(x).labels_
@@ -28,11 +29,12 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose
         ws_old = np.random.standard_normal(p)
         bcss_ws = None
         niter = 0
-        while np.sum(np.abs(ws - ws_old)) / np.sum(np.abs(ws_old)) > 1e-4 and niter < max_iter:
+        while (np.sum(np.abs(ws - ws_old)) / np.sum(np.abs(ws_old)) > 1e-4 and
+               niter < max_iter):
             niter += 1
             ws_old = ws
             if niter > 1:
-                if not k is None:
+                if k is not None:
                     cs = core._update_cs(x, k, ws, cs)
                 else:
                     cs = core._update_cs(x, centers.shape[0], ws, cs)
@@ -46,15 +48,17 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None, verbose
             six.print_('number of non-zero weights:', np.count_nonzero(ws))
             six.print_('sum of weights:', np.sum(ws), flush=True)
     return out
-    
 
-def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=False):
+
+def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None,
+            verbose=False):
     n, p = x.shape
     if wbounds is None:
-        wbounds = np.exp(np.linspace(np.log(1.2), np.log(np.sqrt(p) * 0.9), nvals))
+        wbounds = np.exp(
+            np.linspace(np.log(1.2), np.log(np.sqrt(p) * 0.9), nvals))
     if wbounds.min() <= 1 or len(wbounds) < 2:
         return None
-    if not k is None and not centers is None:
+    if k is not None and centers is not None:
         if centers.shape[0] != k or centers.shape[1] != p:
             return None
 
@@ -72,7 +76,8 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None, verbose=
         tots = utils._cbind(tots, np.sum(out[i][0] * bcss))
     permtots = np.zeros((len(wbounds), nperms))
     for i in range(nperms):
-        perm_out = kmeans(permx[i], k, wbounds, centers=centers, verbose=verbose)
+        perm_out = kmeans(
+            permx[i], k, wbounds, centers=centers, verbose=verbose)
         for j in range(len(perm_out)):
             perm_bcss = core._get_wcss(permx[i], perm_out[j][1])[1]
             permtots[j, i] = np.sum(perm_out[j][0] * perm_bcss)

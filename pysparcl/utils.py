@@ -6,14 +6,14 @@ def _rbind(x0, x1):
         return x1
     else:
         return np.vstack((x0, x1))
-        
-        
+
+
 def _cbind(x0, x1):
     if x0 is None:
         return x1
     else:
         return np.hstack((x0, x1))
-        
+
 
 def _soft_thresholding(x, d):
     return np.sign(x) * np.maximum(0, np.abs(x) - d)
