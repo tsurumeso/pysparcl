@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import six
 import numpy as np
-from pysparcl import core
+from pysparcl import subfunc
 from pysparcl import internal
 
 
@@ -30,7 +30,7 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
         return None
     if metric == 'squared':
         dists = np.square(dists)
-    u, w, crit = core._get_uw(dists, wbound, niter, uorth)
+    u, w, crit = subfunc._get_uw(dists, wbound, niter, uorth)
     return u, w, crit, dists
 
 

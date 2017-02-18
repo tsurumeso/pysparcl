@@ -1,7 +1,7 @@
 import six
 import numpy as np
-from pysparcl import core
 from pysparcl import utils
+from pysparcl import subfunc
 from sklearn.cluster import KMeans
 
 
@@ -35,11 +35,11 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
             ws_old = ws
             if niter > 1:
                 if k is not None:
-                    cs = core._update_cs(x, k, ws, cs)
+                    cs = subfunc._update_cs(x, k, ws, cs)
                 else:
-                    cs = core._update_cs(x, centers.shape[0], ws, cs)
-            ws = core._update_ws(x, cs, wbounds[i])
-            bcss_ws = np.sum(core._get_wcss(x, cs)[1] * ws)
+                    cs = subfunc._update_cs(x, centers.shape[0], ws, cs)
+            ws = subfunc._update_ws(x, cs, wbounds[i])
+            bcss_ws = np.sum(subfunc._get_wcss(x, cs)[1] * ws)
         out.append([ws, cs, bcss_ws, wbounds[i]])
         if verbose:
             six.print_('*-------------------------------------------------*')
@@ -74,14 +74,14 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None,
 
     for i in range(len(out)):
         nnonzerows = utils._cbind(nnonzerows, np.sum(out[i][0] != 0))
-        bcss = core._get_wcss(x, out[i][1])[1]
+        bcss = subfunc._get_wcss(x, out[i][1])[1]
         tots = utils._cbind(tots, np.sum(out[i][0] * bcss))
     permtots = np.zeros((len(wbounds), nperms))
     for i in range(nperms):
         perm_out = kmeans(
             permx[i], k, wbounds, centers=centers, verbose=verbose)
         for j in range(len(perm_out)):
-            perm_bcss = core._get_wcss(permx[i], perm_out[j][1])[1]
+            perm_bcss = subfunc._get_wcss(permx[i], perm_out[j][1])[1]
             permtots[j, i] = np.sum(perm_out[j][0] * perm_bcss)
 
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
