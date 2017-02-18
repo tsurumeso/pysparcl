@@ -53,14 +53,16 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
 def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None,
             verbose=False):
     n, p = x.shape
+    if k is None and centers is None:
+        return None
+    if k is not None and centers is not None:
+        if centers.shape[0] != k or centers.shape[1] != p:
+            return None
     if wbounds is None:
         wbounds = np.exp(
             np.linspace(np.log(1.2), np.log(np.sqrt(p) * 0.9), nvals))
     if wbounds.min() <= 1 or len(wbounds) < 2:
         return None
-    if k is not None and centers is not None:
-        if centers.shape[0] != k or centers.shape[1] != p:
-            return None
 
     permx = np.zeros((nperms, n, p))
     nnonzerows = None
