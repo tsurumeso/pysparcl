@@ -1,2 +1,2 @@
-from pysparcl import cluster
-from pysparcl import hierarchy
+from pysparcl import cluster  # NOQA
+from pysparcl import hierarchy  # NOQA

@@ -1,6 +1,6 @@
 import numpy
-from Cython.Distutils import build_ext
-from setuptools import setup, Extension
+from setuptools import Extension
+from setuptools import setup
 
 
 ext_modules = [

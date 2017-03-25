@@ -1,8 +1,9 @@
 import numpy as np
-from pysparcl import utils
-from sklearn.cluster import KMeans
 from scipy.spatial.distance import pdist
 from scipy.spatial.distance import squareform
+from sklearn.cluster import KMeans
+
+from pysparcl import utils
 
 
 def _get_uw(ds, wbound, niter, uorth=None):

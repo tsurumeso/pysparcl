@@ -1,9 +1,10 @@
 from __future__ import print_function
 
-import six
 import numpy as np
-from pysparcl import subfunc
+import six
+
 from pysparcl import internal
+from pysparcl import subfunc
 
 
 def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):

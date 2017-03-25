@@ -1,8 +1,9 @@
-import six
 import numpy as np
-from pysparcl import utils
-from pysparcl import subfunc
+import six
 from sklearn.cluster import KMeans
+
+from pysparcl import subfunc
+from pysparcl import utils
 
 
 def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
