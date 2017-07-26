@@ -11,7 +11,7 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
     x = x.astype(np.float64)
 
     if x is None and dists is None:
-        return None
+        raise ValueError('Neither x or dists must not be None.')
     if dists is None:
         n, p = x.shape
         nan_inds = np.isnan(x)
@@ -30,7 +30,7 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
     if wbound is None:
         wbound = 0.5 * np.sqrt(dists.shape[1])
     if wbound <= 1:
-        return None
+        raise ValueError('wbound must be > 1.')
     if metric == 'squared':
         dists = np.square(dists)
     u, w, crit = subfunc._get_uw(dists, wbound, niter, uorth)

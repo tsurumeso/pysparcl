@@ -10,14 +10,14 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
            verbose=False):
     n, p = x.shape
     if k is None and centers is None:
-        return None
+        raise ValueError('Neither k or centers must not be None.')
     if k is not None and centers is not None:
         if centers.shape[0] != k or centers.shape[1] != p:
-            return None
+            raise ValueError('Invalid shape of centers.')
     if wbounds is None:
         wbounds = np.linspace(1.1, np.sqrt(p), 20)
     if wbounds.min() <= 1:
-        return None
+        raise ValueError('Any wbound must be > 1.')
 
     if centers is not None:
         cs = KMeans(centers.shape[0], init=centers, n_init=1).fit(x).labels_
@@ -55,15 +55,15 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None,
             verbose=False):
     n, p = x.shape
     if k is None and centers is None:
-        return None
+        raise ValueError('Neither k or centers must not be None.')
     if k is not None and centers is not None:
         if centers.shape[0] != k or centers.shape[1] != p:
-            return None
+            raise ValueError('Invalid shape of centers.')
     if wbounds is None:
         wbounds = np.exp(
             np.linspace(np.log(1.2), np.log(np.sqrt(p) * 0.9), nvals))
     if wbounds.min() <= 1 or len(wbounds) < 2:
-        return None
+        raise ValueError('Any wbound must be > 1.')
 
     permx = np.zeros((nperms, n, p))
     nnonzerows = None
