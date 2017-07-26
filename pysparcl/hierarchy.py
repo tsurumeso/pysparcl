@@ -8,6 +8,8 @@ from pysparcl import subfunc
 
 
 def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
+    x = x.astype(np.float64)
+
     if x is None and dists is None:
         return None
     if dists is None:
@@ -36,6 +38,8 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
 
 
 def permute(x, nperms=10, wbounds=None, metric='squared', verbose=False):
+    x = x.astype(np.float64)
+
     if wbounds is None:
         wbounds = np.linspace(1.1, np.sqrt(x.shape[1]) * 0.7, 10)
 
