@@ -35,7 +35,8 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
     if metric == 'squared':
         dists = np.square(dists)
     u, w, crit = subfunc._get_uw(dists, wbound, niter, uorth)
-    return u, w, crit, dists
+    out = {'u': u, 'w': w, 'crit': crit, 'dists': dists}
+    return out
 
 
 def permute(x, nperms=10, wbounds=None, metric='squared', verbose=False):
@@ -48,24 +49,26 @@ def permute(x, nperms=10, wbounds=None, metric='squared', verbose=False):
     permtots = np.zeros((len(wbounds), nperms))
     nnonzerows = np.zeros(len(wbounds))
 
-    u, w, crit, dists = pdist(x, wbound=wbounds[0], metric=metric)
-    nnonzerows[0] = np.sum(w != 0)
-    tots[0] = crit
+    out = pdist(x, wbound=wbounds[0], metric=metric)
+    nnonzerows[0] = np.sum(out['w'] != 0)
+    tots[0] = out['crit']
     for i in range(1, len(wbounds)):
-        result = pdist(None, dists, wbounds[i], metric)
-        nnonzerows[i] = np.sum(result[1] != 0)
-        tots[i] = result[2]
+        result = pdist(None, out['dists'], wbounds[i], metric)
+        nnonzerows[i] = np.sum(result['w'] != 0)
+        tots[i] = result['crit']
 
-    permdists = np.zeros(dists.shape)
+    permdists = np.zeros(out['dists'].shape)
     for i in range(nperms):
         if verbose:
             six.print_('Permutation %d of %d' % (i + 1, nperms), flush=True)
         for j in range(permdists.shape[1]):
-            permdists[:, j] = np.random.permutation(dists[:, j])
+            permdists[:, j] = np.random.permutation(out['dists'][:, j])
         for j in range(len(wbounds)):
             result = pdist(None, permdists, wbounds[j], metric)
-            permtots[j, i] = result[2]
+            permtots[j, i] = result['crit']
 
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
     bestw = wbounds[gaps.argmax()]
-    return bestw, gaps, wbounds, nnonzerows
+    out = {'bestw': bestw, 'gaps': gaps, 'wbounds': wbounds,
+           'nnonzerows': nnonzerows}
+    return out

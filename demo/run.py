@@ -14,7 +14,8 @@ def show_dendrogram(dist):
     divider = make_axes_locatable(main_axes)
     plt.sca(divider.append_axes("top", 1.5, pad=0))
     link = linkage(dist, method='average')
-    dendro = dendrogram(link, no_labels=True, link_color_func=lambda x: 'black')
+    dendro = dendrogram(
+        link, no_labels=True, link_color_func=lambda x: 'black')
     plt.gca().set_axis_off()
     plt.gca().get_xaxis().set_visible(False)
     plt.gca().get_yaxis().set_visible(False)
@@ -37,18 +38,18 @@ if __name__ == '__main__':
     class1 = np.zeros(N_dim)
     class2 = np.zeros(N_dim)
     perm = np.random.permutation(N_dim)[:N_sparse]
-    class1[perm] = 1 
-    class2[perm] = -1 
+    class1[perm] = 1
+    class2[perm] = -1
 
     np.random.seed(seed=1)
-    data = np.vstack(((np.dot(np.ones((N, 1)), [class1]), 
+    data = np.vstack(((np.dot(np.ones((N, 1)), [class1]),
                        np.dot(np.ones((N, 1)), [class2]))))
     data += 0.5 * np.random.randn(*data.shape)
 
     dist = pdist(data, 'euclidean')
     show_dendrogram(dist)
 
-    bestw, _, _, _ = pysparcl.hierarchy.permute(data)
-    u, _, _, _ = pysparcl.hierarchy.pdist(data, wbound=bestw)
-    dist = squareform(u)
+    perm = pysparcl.hierarchy.permute(data)
+    result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
+    dist = squareform(result['u'])
     show_dendrogram(dist)

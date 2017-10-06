@@ -41,7 +41,8 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
                     cs = subfunc._update_cs(x, centers.shape[0], ws, cs)
             ws = subfunc._update_ws(x, cs, wbounds[i])
             bcss_ws = np.sum(subfunc._get_wcss(x, cs)[1] * ws)
-        out.append([ws, cs, bcss_ws, wbounds[i]])
+        result = {'ws': ws, 'cs': cs, 'bcss_ws': bcss_ws, 'wbound': wbounds[i]}
+        out.append(result)
         if verbose:
             six.print_('*-------------------------------------------------*')
             six.print_('iter:', i + 1)
@@ -74,17 +75,19 @@ def permute(x, k=None, nperms=25, wbounds=None, nvals=10, centers=None,
     out = kmeans(x, k, wbounds, centers=centers, verbose=verbose)
 
     for i in range(len(out)):
-        nnonzerows = utils._cbind(nnonzerows, np.sum(out[i][0] != 0))
-        bcss = subfunc._get_wcss(x, out[i][1])[1]
-        tots = utils._cbind(tots, np.sum(out[i][0] * bcss))
+        nnonzerows = utils._cbind(nnonzerows, np.sum(out[i]['ws'] != 0))
+        bcss = subfunc._get_wcss(x, out[i]['cs'])[1]
+        tots = utils._cbind(tots, np.sum(out[i]['ws'] * bcss))
     permtots = np.zeros((len(wbounds), nperms))
     for i in range(nperms):
         perm_out = kmeans(
             permx[i], k, wbounds, centers=centers, verbose=verbose)
         for j in range(len(perm_out)):
-            perm_bcss = subfunc._get_wcss(permx[i], perm_out[j][1])[1]
-            permtots[j, i] = np.sum(perm_out[j][0] * perm_bcss)
+            perm_bcss = subfunc._get_wcss(permx[i], perm_out[j]['cs'])[1]
+            permtots[j, i] = np.sum(perm_out[j]['ws'] * perm_bcss)
 
     gaps = np.log(tots) - np.log(permtots).mean(axis=1)
     bestw = wbounds[gaps.argmax()]
-    return bestw, gaps, wbounds, nnonzerows
+    out = {'bestw': bestw, 'gaps': gaps, 'wbounds': wbounds,
+           'nnonzerows': nnonzerows}
+    return out
