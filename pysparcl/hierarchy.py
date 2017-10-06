@@ -8,7 +8,8 @@ from pysparcl import subfunc
 
 
 def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
-    x = x.astype(np.float64)
+    if x is not None:
+        x = x.astype(np.float64)
 
     if x is None and dists is None:
         raise ValueError('Neither x or dists must not be None.')
