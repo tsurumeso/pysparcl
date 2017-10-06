@@ -2,7 +2,7 @@
 
 Python implementation of the sparse clustering methods of Witten and Tibshirani (2010).
 
-## Sample Results
+## Results of the sample script
 |Hierarchical clustering|Sparse hierarchical clustering|
 |:-:|:-:|
 |![](images/hc.png)|![](images/shc.png)|
@@ -17,8 +17,8 @@ Python implementation of the sparse clustering methods of Witten and Tibshirani 
 ## Requirements
 
 - Cython
+- Matplotlib (for running the sample script)
 - NumPy
-- matplotlib (for running the sample script)
 - scikit-learn
 - SciPy
 
@@ -57,13 +57,12 @@ import pysparcl
 
 from scipy.cluster.hierarchy import dendrogram
 from scipy.cluster.hierarchy import linkage
-from scipy.spatial.distance import pdist
 
 
 # data is nxp matrix (n samples p dimentional features)
-bestw, _, _, _ = pysparcl.hierarchy.permute(data)
-u, _, _, _ = pysparcl.hierarchy.pdist(data, wbound=bestw)
-dist = squareform(u)
+perm = pysparcl.hierarchy.permute(data)
+result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
+dist = squareform(result['u'])
 link = linkage(dist, method='average')
 dendro = dendrogram(link)
 plt.show()
