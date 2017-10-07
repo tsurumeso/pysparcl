@@ -31,13 +31,11 @@ def show_dendrogram(dist):
 if __name__ == '__main__':
     N = 50
     N_dim = 1000
-    N_sparse = 10
-
-    label = np.vstack((np.zeros((N, 1)), np.ones((N, 1))))
+    N_nonzero = 10
 
     class1 = np.zeros(N_dim)
     class2 = np.zeros(N_dim)
-    perm = np.random.permutation(N_dim)[:N_sparse]
+    perm = np.random.permutation(N_dim)[:N_nonzero]
     class1[perm] = 1
     class2[perm] = -1
 
@@ -46,10 +44,14 @@ if __name__ == '__main__':
                        np.dot(np.ones((N, 1)), [class2]))))
     data += 0.5 * np.random.randn(*data.shape)
 
+    print('Perform hierarchical clustering...')
     dist = pdist(data, 'euclidean')
     show_dendrogram(dist)
 
-    perm = pysparcl.hierarchy.permute(data)
+    print('Selecting tuning parameter for sparse hierarchical clustering...')
+    perm = pysparcl.hierarchy.permute(data, verbose=True)
+
+    print('Perform sparse hierarchical clustering...')
     result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
     dist = squareform(result['u'])
     show_dendrogram(dist)
