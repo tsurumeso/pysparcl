@@ -27,8 +27,8 @@ Python implementation of the sparse clustering methods of Witten and Tibshirani 
 ### Install required packages
 ```
 pip install cython
-pip install numpy
 pip install matplotlib
+pip install numpy
 pip install scikit-learn
 pip install scipy
 ```
@@ -57,6 +57,7 @@ import pysparcl
 
 from scipy.cluster.hierarchy import dendrogram
 from scipy.cluster.hierarchy import linkage
+from scipy.spatial.distance import squareform
 
 
 # data is nxp matrix (n samples p dimentional features)
