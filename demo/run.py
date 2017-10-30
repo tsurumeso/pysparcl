@@ -34,6 +34,7 @@ if __name__ == '__main__':
     N = 50
     N_dim = 1000
     N_nonzero = 10
+    np.random.seed(seed=1)
 
     class1 = np.zeros(N_dim)
     class2 = np.zeros(N_dim)
@@ -41,7 +42,6 @@ if __name__ == '__main__':
     class1[perm] = 1
     class2[perm] = -1
 
-    np.random.seed(seed=1)
     data = np.vstack(((np.dot(np.ones((N, 1)), [class1]),
                        np.dot(np.ones((N, 1)), [class2]))))
     data += 0.5 * np.random.randn(*data.shape)
