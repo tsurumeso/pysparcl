@@ -55,5 +55,4 @@ if __name__ == '__main__':
 
     print('Perform sparse hierarchical clustering...')
     result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
-    dist = squareform(result['u'])
-    show_dendrogram(dist)
+    show_dendrogram(result['u'])

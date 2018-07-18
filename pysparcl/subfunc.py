@@ -38,7 +38,7 @@ def _get_uw(ds, wbound, niter, uorth=None):
     u = u / np.linalg.norm(u)
     w = w / np.linalg.norm(w)
     crit = np.sum(u * (ds.dot(w.T)))
-    u = squareform(u / np.sqrt(2.))
+    u /= np.sqrt(2.)
     return u, w, crit
 
 
