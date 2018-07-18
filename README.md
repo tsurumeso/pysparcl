@@ -2,7 +2,7 @@
 
 Python implementation of the sparse clustering methods of Witten and Tibshirani (2010).
 
-## Results of the sample script
+## Demo results
 |Hierarchical clustering|Sparse hierarchical clustering|
 |:-:|:-:|
 |![](images/hc.png)|![](images/shc.png)|
@@ -38,13 +38,13 @@ pip install scipy
 git clone https://github.com/tsurumeso/pysparcl.git
 ```
 
-### Run the setup script
+### Run setup script
 ```
 cd pysparcl
 python setup.py install
 ```
 
-### Run the sample script
+### Run demo
 ```
 cd demo
 python run.py
@@ -57,14 +57,12 @@ import pysparcl
 
 from scipy.cluster.hierarchy import dendrogram
 from scipy.cluster.hierarchy import linkage
-from scipy.spatial.distance import squareform
 
 
 # data is nxp matrix (n samples p dimentional features)
 perm = pysparcl.hierarchy.permute(data)
 result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
-dist = squareform(result['u'])
-link = linkage(dist, method='average')
+link = linkage(result['u'], method='average')
 dendro = dendrogram(link)
 plt.show()
 ```
