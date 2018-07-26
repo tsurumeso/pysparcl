@@ -5,8 +5,8 @@ from setuptools import setup
 
 ext_modules = [
     Extension(
-        'pysparcl.internal',
-        sources=['pysparcl/internal.pyx'],
+        'pysparcl.distfun',
+        sources=['pysparcl/distfun.pyx'],
         include_dirs=[numpy.get_include()]
     )
 ]

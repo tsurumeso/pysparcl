@@ -3,7 +3,7 @@ from __future__ import print_function
 import numpy as np
 import six
 
-from pysparcl import internal
+from pysparcl import distfun
 from pysparcl import subfunc
 
 
@@ -18,11 +18,11 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
         nan_inds = np.isnan(x)
         xnonan = x.copy()
         xnonan[nan_inds] = 0
-        dists = internal.distfun(xnonan)
+        dists = distfun.absolute(xnonan)
         if np.sum(nan_inds) > 0:
             xbin = np.ones((n, p))
             xbin[nan_inds] = 0
-            mult = internal.multfun(xbin)
+            mult = distfun.multiply(xbin)
             if metric == 'squared':
                 dists *= np.sqrt(p / np.sum(mult != 0, axis=1))[:, np.newaxis]
             elif metric == 'absolute':

@@ -31,12 +31,12 @@ def _get_uw(ds, wbound, niter, uorth=None):
         argw = np.maximum(u.dot(ds), 0).T
         lam = utils._binary_search(argw, wbound)
         w = utils._soft_thresholding(argw, lam)
-        w = w / np.linalg.norm(w)
+        w /= np.linalg.norm(w)
     u = ds[:, argw >= lam].dot(w[argw >= lam].T) / np.sum(w)
     if uorth is not None:
         u -= uorth.dot(uorth.T.dot(u))
-    u = u / np.linalg.norm(u)
-    w = w / np.linalg.norm(w)
+    u /= np.linalg.norm(u)
+    w /= np.linalg.norm(w)
     crit = np.sum(u * (ds.dot(w.T)))
     u /= np.sqrt(2.)
     return u, w, crit
