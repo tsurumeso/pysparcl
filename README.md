@@ -17,7 +17,7 @@ Python implementation of the sparse clustering methods of Witten and Tibshirani 
 ## Requirements
 
 - Cython
-- Matplotlib (for running the sample script)
+- Matplotlib (for running demo)
 - NumPy
 - scikit-learn
 - SciPy
