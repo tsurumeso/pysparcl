@@ -47,7 +47,7 @@ if __name__ == '__main__':
     data += 0.5 * np.random.randn(*data.shape)
 
     print('Perform hierarchical clustering...')
-    dist = pdist(data, 'euclidean')
+    dist = pdist(data, 'sqeuclidean')
     show_dendrogram(dist)
 
     print('Selecting tuning parameter for sparse hierarchical clustering...')
