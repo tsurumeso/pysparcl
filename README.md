@@ -59,9 +59,9 @@ from scipy.cluster.hierarchy import dendrogram
 from scipy.cluster.hierarchy import linkage
 
 
-# data is nxp matrix (n samples p dimentional features)
-perm = pysparcl.hierarchy.permute(data)
-result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
+# X is (n, p) data matrix (samples, features)
+perm = pysparcl.hierarchy.permute(X)
+result = pysparcl.hierarchy.pdist(X, wbound=perm['bestw'])
 link = linkage(result['u'], method='average')
 dendro = dendrogram(link)
 plt.show()
