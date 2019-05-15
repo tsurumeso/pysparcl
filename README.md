@@ -3,6 +3,9 @@
 Python implementation of the sparse clustering methods of Witten and Tibshirani (2010).
 
 ## Demo results
+
+Each sample has 1000 features, and 1 % of them are informative.
+
 |Hierarchical clustering|Sparse hierarchical clustering|
 |:-:|:-:|
 |![](images/hc.png)|![](images/shc.png)|
