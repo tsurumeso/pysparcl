@@ -15,17 +15,21 @@ def show_dendrogram(dist):
     main_axes = plt.gca()
     divider = make_axes_locatable(main_axes)
     plt.sca(divider.append_axes("top", 1.5, pad=0))
+
     link = linkage(dist, method='average')
     dendro = dendrogram(
         link, no_labels=True, link_color_func=lambda x: 'black')
+
     plt.gca().set_axis_off()
     plt.gca().get_xaxis().set_visible(False)
     plt.gca().get_yaxis().set_visible(False)
     plt.sca(main_axes)
+
     distmat = squareform(dist)
     distmat /= distmat.max()
     indices = np.array(dendro['leaves'])
     distmat = (distmat[:, indices])[indices, :]
+
     plt.imshow(distmat, cmap='Blues', interpolation='nearest')
     plt.show()
 
@@ -44,7 +48,7 @@ if __name__ == '__main__':
 
     data = np.vstack(((np.dot(np.ones((N, 1)), [class1]),
                        np.dot(np.ones((N, 1)), [class2]))))
-    data += 0.5 * np.random.randn(*data.shape)
+    data += np.random.randn(*data.shape)
 
     print('Perform hierarchical clustering...')
     dist = pdist(data, 'sqeuclidean')
