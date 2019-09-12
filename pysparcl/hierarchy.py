@@ -12,7 +12,7 @@ def pdist(x, dists=None, wbound=None, metric='squared', niter=15, uorth=None):
         x = x.astype(np.float64)
 
     if x is None and dists is None:
-        raise ValueError('Neither x or dists must not be None.')
+        raise ValueError('x and dists are None.')
     if dists is None:
         n, p = x.shape
         nan_inds = np.isnan(x)
