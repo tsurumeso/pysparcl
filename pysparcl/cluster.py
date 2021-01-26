@@ -14,8 +14,11 @@ def kmeans(x, k=None, wbounds=None, n_init=20, max_iter=6, centers=None,
     if k is not None and centers is not None:
         if centers.shape[0] != k or centers.shape[1] != p:
             raise ValueError('Invalid shape of centers.')
+
     if wbounds is None:
         wbounds = np.linspace(1.1, np.sqrt(p), 20)
+    if np.isscalar(wbounds):
+        wbounds = np.asarray([wbounds])
     if wbounds.min() <= 1:
         raise ValueError('Each wbound must be > 1.')
 
