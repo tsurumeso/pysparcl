@@ -12,10 +12,10 @@ Each sample has 1000 features, and 1 % of them are informative.
 
 ## Functions
 
-- Sparse KMeans clustering
 - Sparse hierarchical clustering
-- Selection of turning parameter for sparse KMeans clustering
+- Sparse KMeans clustering
 - Selection of turning parameter for sparse hierarchical clustering
+- Selection of turning parameter for sparse KMeans clustering
 
 ## Requirements
 
@@ -48,9 +48,16 @@ python setup.py install
 ```
 
 ### Run demo
+Perform sparse hierarchical clustering.
 ```
 cd demo
 python run.py
+```
+
+Perform sparse KMeans clustering.
+```
+cd demo
+python run.py -m kmeans
 ```
 
 ## Usage
