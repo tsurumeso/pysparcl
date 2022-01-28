@@ -17,24 +17,7 @@ Each sample has 1000 features, and 1 % of them are informative.
 - Selection of turning parameter for sparse hierarchical clustering
 - Selection of turning parameter for sparse KMeans clustering
 
-## Requirements
-
-- Cython
-- Matplotlib (for running demo)
-- NumPy
-- scikit-learn
-- SciPy
-
 ## Installation
-
-### Install required packages
-```
-pip install cython
-pip install matplotlib
-pip install numpy
-pip install scikit-learn
-pip install scipy
-```
 
 ### Getting pysparcl
 ```
@@ -69,7 +52,7 @@ from scipy.cluster.hierarchy import dendrogram
 from scipy.cluster.hierarchy import linkage
 
 
-# X is (n, p) data matrix (samples, features)
+# X is a numpy array of (samples, features) shape.
 perm = pysparcl.hierarchy.permute(X)
 result = pysparcl.hierarchy.pdist(X, wbound=perm['bestw'])
 link = linkage(result['u'], method='average')
