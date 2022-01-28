@@ -1,6 +1,7 @@
 *.c
 *.pyc
 *.pyd
+.eggs
 dist/
 test/
 build/
