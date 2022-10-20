@@ -43,6 +43,7 @@ def sparse_hierarchical_clustering(data):
 
     print('Selecting tuning parameter for sparse hierarchical clustering...')
     perm = pysparcl.hierarchy.permute(data, verbose=True)
+    print(perm['bestw'])
 
     print('Perform sparse hierarchical clustering...')
     result = pysparcl.hierarchy.pdist(data, wbound=perm['bestw'])
@@ -55,6 +56,7 @@ def sparse_kmeans_clustering(data):
 
     print('Selecting tuning parameter for sparse KMeans clustering...')
     perm = pysparcl.cluster.permute(data, k=2, verbose=False)
+    print(perm['bestw'])
 
     print('Perform sparse KMeans clustering...')
     result = pysparcl.cluster.kmeans(data, k=2, wbounds=perm['bestw'])
