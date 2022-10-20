@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.spatial.distance import pdist
+from scipy.spatial.distance import cdist
 from scipy.spatial.distance import squareform
 from sklearn.cluster import KMeans
 
@@ -56,7 +56,6 @@ def _get_wcss(x, cs, ws=None):
 def _update_cs(x, k, ws, cs):
     x = x[:, ws != 0]
     z = x * np.sqrt(ws[ws != 0])
-    nrowz = z.shape[0]
     mus = None
     if cs is not None:
         for i in np.unique(cs):
@@ -67,8 +66,7 @@ def _update_cs(x, k, ws, cs):
     if mus is None:
         km = KMeans(k, init='random', n_init=10).fit(z)
     else:
-        distmat = squareform(pdist(utils._rbind(z, mus)))
-        distmat = distmat[:nrowz, (nrowz + 1):(nrowz + k)]
+        distmat = cdist(z, mus)
         nearest = distmat.argmin(axis=1)
         if len(np.unique(nearest)) == k:
             km = KMeans(k, init=mus, n_init=1).fit(z)
