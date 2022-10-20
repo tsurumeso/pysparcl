@@ -20,7 +20,7 @@ ext_modules = [
 
 setup(
     name='pysparcl',
-    version='1.4.3',
+    version='1.4.4',
     author='tsurumeso',
     license='GPL-2.0 License',
     packages=['pysparcl'],
